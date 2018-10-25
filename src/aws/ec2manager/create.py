@@ -30,10 +30,12 @@ class Creator():
         config = Parser.parse('instances.ini')
         ami_image_id = config['INSTANCES']['ami_id']
         instance_type = config['INSTANCES']['instance_type']
+        subnet_id = config['INSTANCES']['subnet_id']
+        key_name = config['INSTANCES']['key_name']
         # Create the ec2. WARNING : Stop this after
-        print(ami_image_id)
         try:
-            instances = resource('ec2').create_instances(ImageId=ami_image_id, InstanceType=instance_type, MinCount=min_count, MaxCount=max_count)
+            instances = resource('ec2').create_instances(ImageId=ami_image_id, InstanceType=instance_type, MinCount=min_count,\
+                                                        MaxCount=max_count, SubnetId=subnet_id, KeyName=key_name)
             # Debug message
             print("EC2 are fully created: ")
             for instance in instances:
