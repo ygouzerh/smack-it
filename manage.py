@@ -14,6 +14,7 @@ from src.aws.ec2manager.read import ReaderCli
 from src.aws.ec2manager.stop import Stop
 from src.aws.ec2manager.terminate import Terminate
 from src.aws.ec2manager.create import Creator
+from src.aws.ec2manager.cleaner import Cleaner
 
 class Manage:
     """
@@ -54,7 +55,9 @@ class Manage:
     def create():
         return Creator    
 
+    @staticmethod
+    def clean():
+        return Cleaner
+
 if __name__ == '__main__':
     Fire(Manage)
-
-
