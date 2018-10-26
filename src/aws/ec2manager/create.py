@@ -32,10 +32,11 @@ class Creator():
         instance_type = config['INSTANCES']['instance_type']
         subnet_id = config['INSTANCES']['subnet_id']
         key_name = config['INSTANCES']['key_name']
+        security_group_id = config['INSTANCES']['security_group_id']
         # Create the ec2. WARNING : Stop this after
         try:
             instances = resource('ec2').create_instances(ImageId=ami_image_id, InstanceType=instance_type, MinCount=min_count,\
-                                                        MaxCount=max_count, SubnetId=subnet_id, KeyName=key_name)
+                                                        MaxCount=max_count, SubnetId=subnet_id, KeyName=key_name, SecurityGroupIds=[security_group_id])
             # Debug message
             print("EC2 are fully created: ")
             for instance in instances:
