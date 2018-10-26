@@ -1,0 +1,43 @@
+Git :
+Une fois installé on écrit ces bouts de code :
+Git config  --global color.diff auto
+Git config  --global color.status auto
+Git config  --global color.branch auto
+Donner à git le pseudo et le mail :
+Git config  --global user.name « le nom que j’ai donné » 
+Git config  --global user.email « mail »
+Initialiser le dossier git :
+Créer un dossier au bureau puis sur le cmd on écrit :
+Git clone urlcopiédegit
+Ajouter un fichier au dossier
+Initialiser git : git init
+
+Git status : permet de voir quel fichier est ajouté modifié enregistré ou commit
+Git add nomfichier : pour ajouter le fichier au git
+S’assurer qu’il est enregistré avec git status une fois c’est enregistré on peut faire un commit
+Git commit -m « message »
+
+Pour ajouter tous les fichiers en même temps : git add  --all
+Pour l’ajouter au serveur : git push
+Il demande le username et le mot de passe on les écrit puis c’est bon
+Récupérer le travail des autres: Git pull 
+Pour avoir le suivi des modifs : git log
+Ajouter fichier normal : gedit nomfichier
+Gitk : permet de voir l’historique qui a fait quoi et tout
+Git checkout – nomfichier : permet de revenir à l’état précédente
+Git diff Head~1 ou Git diff numcommit : montre la différence par rapport au dernier commit
+NB : head est le dernier commit, head~1 avant dernier…
+Créer branche sur git : git branch nombranche
+Lister les branches : git branch
+Pour changer de branche : git checkout nombranche
+Pour enregistrer les modifs effectués sur la branche sur le projet initial on fait : 
+Git checkout master
+Git merge nombranche
+Git branch -D nombranche ( supprimer la branche facultative)
+Git log –oneline : affiche l’historique plus l’identifiant des commit
+Touch : permet de créer un fichier
+Si on veut ignorer un fichier on créer un fichier gitignore puis on ajoute le fichier ignoré à gitignore :
+Echo « nomfichieràignorer »  >> .gitignore
+git reset Head~ 1 : Annule le commit mais ne permet pas d’avoir la version précédente 
+ git fetch : permet d’avoir le fichier des autres
+git merge : permet de fusionner les changements et géreclr
