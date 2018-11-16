@@ -28,7 +28,6 @@ class Parser():
         # Create the parser
         config = ConfigParser()
         # Parse the file
-        config.read(config_path.absolute())
+        config.read(str(config_path.absolute()))
         # Return the file parsed
         return config
-        

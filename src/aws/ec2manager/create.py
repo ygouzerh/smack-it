@@ -11,10 +11,11 @@ from boto3 import resource
 from fire import Fire
 from configparser import ConfigParser
 import os
+import time
 from pathlib import Path
 from ...utils.python.config_parser import Parser
 
-class Creator():
+class Creator:
     """
         Create ec2 instances
     """
@@ -37,6 +38,8 @@ class Creator():
         try:
             instances = resource('ec2').create_instances(ImageId=ami_image_id, InstanceType=instance_type, MinCount=min_count,\
                                                         MaxCount=max_count, SubnetId=subnet_id, KeyName=key_name, SecurityGroupIds=[security_group_id])
+            # Wait until each instances are running
+            Creator._wait_until_created(instances)
             # Debug message
             print("EC2 are fully created: ")
             for instance in instances:
@@ -45,3 +48,26 @@ class Creator():
             print(exception)
             print("Error during the instance creation")
             # TODO : Revert the possible instance
+
+    @staticmethod
+    def _wait_until_created(instances):
+        """
+            Wait until all instances are
+            fullty created
+        """
+        all_runned = False
+        while(Creator._check_all_runned(instances) != True):
+            print("Still in creation.")
+            time.sleep(5)
+
+    @staticmethod
+    def _check_all_runned(instances):
+        """
+            Check if all instances are runned
+        """
+        # Update the instances to get the last status
+        instances = resource('ec2').instances.filter(InstanceIds=[instance.id for instance in instances])
+        for instance in instances:
+            if(instance.state["Name"] != 'running'):
+                return False
+        return True

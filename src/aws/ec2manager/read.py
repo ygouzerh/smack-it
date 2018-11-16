@@ -10,7 +10,7 @@ API to read our instances in many ways.
 from boto3 import resource
 from fire import Fire
 
-class Reader:    
+class Reader:
     """
     Startegy Design Pattern
     Get informations on our ec2 instances in many differents ways.
@@ -54,6 +54,19 @@ class ReaderRunning(Reader):
         """
         return resource('ec2').instances.filter(Filters=[{'Name': 'instance-state-name', 'Values': ['running']}])
 
+class ReaderNotTerminated(Reader):
+    """
+        Get the instances which are not terminated
+    """
+
+    @classmethod
+    def instances(cls):
+        """
+            Return the running instances
+        """
+        return resource('ec2').instances.filter(Filters=[{'Name': 'instance-state-name', 'Values': ["pending", \
+                                                        "running", "stopping", "stopped"]}])
+
 class ReaderCli:
     """
         Return each strategy to be used in the CLI
@@ -71,4 +84,10 @@ class ReaderCli:
             Running instances
         """
         return ReaderRunning
-    
+
+    @staticmethod
+    def not_terminated():
+        """
+            Not terminated instances
+        """
+        return ReaderNotTerminated
