@@ -38,16 +38,30 @@ class Reader:
     @classmethod
     def instances(cls):
         """
-            Returned a filtered list of instances
+            Return a filtered list of our instances
         """
         raise NotImplementedError
 
     @classmethod
     def ids(cls):
         """
-            Returneds the id of the filtered instances
+            Return the id of the filtered instances
         """
         return [instance.id for instance in cls.instances()]
+
+    @classmethod
+    def public_ips(cls):
+        """
+            Return the public ips of our instances
+        """
+        return [instance.public_ip_address for instance in cls.instances()]
+
+    @classmethod
+    def private_ips(cls):
+        """
+            Return the private ips of our instances
+        """
+        return [instance.private_ip_address for instance in cls.instances()]
 
 class ReaderAll(Reader):
     """
