@@ -81,5 +81,6 @@ class Creator:
     def _tag_instances(instances, tag_key, tag_value):
         """
             Tag all the instances with the tag : 'tag_key => tag_value'
+            TODO : Use DryRun and verification of the execution
         """
         response = resource('ec2').create_tags(Resources = [instance.id for instance in instances], Tags=[{'Key': tag_key, 'Value': tag_value}])
