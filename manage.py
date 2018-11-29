@@ -15,6 +15,8 @@ from src.aws.ec2manager.stop import Stop
 from src.aws.ec2manager.terminate import Terminate
 from src.aws.ec2manager.create import Creator
 from src.aws.ec2manager.cleaner import Cleaner
+from src.aws.ec2manager.installator import Installator
+from src.aws.ec2manager.security import Security
 
 class Manage:
     """
@@ -35,7 +37,7 @@ class Manage:
             ec2 instances
         """
         return ReaderCli
-    
+
     @staticmethod
     def stop():
         """
@@ -53,11 +55,20 @@ class Manage:
 
     @staticmethod
     def create():
-        return Creator    
+        return Creator
 
     @staticmethod
     def clean():
         return Cleaner
+
+    @staticmethod
+    def secure():
+        return Security
+
+    @staticmethod
+    def install():
+        return Installator
+
 
 if __name__ == '__main__':
     Fire(Manage)

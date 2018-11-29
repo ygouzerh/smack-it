@@ -9,8 +9,10 @@ API to read our instances in many ways.
 
 from boto3 import resource
 from fire import Fire
+from ...utils.python.config_parser import Parser
+from .tagger import Tagger
 
-class Reader:    
+class Reader:
     """
     Startegy Design Pattern
     Get informations on our ec2 instances in many differents ways.
@@ -19,16 +21,30 @@ class Reader:
     @classmethod
     def instances(cls):
         """
-            Returned a filtered list of instances
+            Return a filtered list of our instances
         """
         raise NotImplementedError
 
     @classmethod
     def ids(cls):
         """
-            Returneds the id of the filtered instances
+            Return the id of the filtered instances
         """
         return [instance.id for instance in cls.instances()]
+
+    @classmethod
+    def public_ips(cls):
+        """
+            Return the public ips of our instances
+        """
+        return [instance.public_ip_address for instance in cls.instances()]
+
+    @classmethod
+    def private_ips(cls):
+        """
+            Return the private ips of our instances
+        """
+        return [instance.private_ip_address for instance in cls.instances()]
 
 class ReaderAll(Reader):
     """
@@ -40,7 +56,7 @@ class ReaderAll(Reader):
         """
             Return all the instances
         """
-        return resource('ec2').instances.all()
+        return resource('ec2').instances.filter(Filters=[Tagger.get_project_filter()])
 
 class ReaderRunning(Reader):
     """
@@ -52,7 +68,20 @@ class ReaderRunning(Reader):
         """
             Return the running instances
         """
-        return resource('ec2').instances.filter(Filters=[{'Name': 'instance-state-name', 'Values': ['running']}])
+        return resource('ec2').instances.filter(Filters=[{'Name': 'instance-state-name', 'Values': ['running']}, Tagger.get_project_filter()])
+
+class ReaderNotTerminated(Reader):
+    """
+        Get the instances which are not terminated
+    """
+
+    @classmethod
+    def instances(cls):
+        """
+            Return the running instances
+        """
+        return resource('ec2').instances.filter(Filters=[{'Name': 'instance-state-name', 'Values': ["pending", \
+                                                        "running", "stopping", "stopped"]}, Tagger.get_project_filter()])
 
 class ReaderCli:
     """
@@ -71,4 +100,10 @@ class ReaderCli:
             Running instances
         """
         return ReaderRunning
-    
+
+    @staticmethod
+    def not_terminated():
+        """
+            Not terminated instances
+        """
+        return ReaderNotTerminated
