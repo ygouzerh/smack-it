@@ -51,7 +51,6 @@ sudo apt-get install -y kubelet kubeadm kubectl docker.io
 sudo apt-mark hold kubelet kubeadm kubectl docker.io
 
 #Initialize the master
-# --pod-network-cidr=192.168.0.0/16 for Calico
 sudo kubeadm init --config kadmconfig_mas.yml
 
 
@@ -81,91 +80,5 @@ sudo apt-get install -y kubelet kubeadm docker.io
 sudo apt-mark hold kubelet kubeadm docker.io
 
 
-cat <<EOF | sudo tee /etc/default/kubelet
-KUBELET_EXTRA_ARGS=--cloud-provider=aws
-EOF
-
 # After the command sudo kubeadm init --config kadmconfig_mas.yml has finished, join the worker to the master
-# eg.: sudo kubeadm join MASTER_PRIVATE_IP:6443 --token <token> --discovery-token-ca-cert-hash sha256:xxxx
-# To get this command, run on the master:
-sudo kubeadm token create --print-join-command
-
-
-
-
-
-
-
-######################Trash
-
-
-# To get the public IPv4 of an instance
-curl http://169.254.169.254/latest/meta-data/public-ipv4
-
-
-
-
-
-# To execute on all nodes
-# ssh -o "StrictHostKeyChecking no" -i master/connect-to-master.pem ubuntu@IP
-# kubectl communicates with server-api located on the master to deploy a
-# containerized application for example.
-
-# mkdir -p /etc/kubernetes/
-# touch /etc/kubernetes/cloud.conf
-# cat << EOF  > /etc/kubernetes/cloud.conf
-# [Global]
-# KubernetesClusterTag=kubernetes
-# KubernetesClusterID=kubernetes
-# Zone=eu-west-1b
-# EOF
-# sudo chmod 0600 /etc/kubernetes/cloud.conf
-# # change the hostname, maybe we should also edit the /etc/cloud/cloud.cfg file.
-
-
-
-
-
-
-# alias for kubectl and auto-completion, should to install a package called bash-completion
-alias k=kubectl
-source <(kubectl completion bash) # to add it to the profile echo "source <(kubectl completion bash)" >> ~/.bashrc
-source <(kubectl completion bash | sed s/kubectl/k/g) # to add it to the profile echo "source <(kubectl completion bash | sed s/kubectl/k/g)" >> ~/.bashrc
-
-
-
-
-
-
-# To control the cluster from a remote machine (dev machine) other than the master
-# On the master (on /home/ubuntu for eg)
-sudo cp /etc/kubernetes/admin.conf . && sudo chown ubuntu admin.conf
-
-# on the remote machine
-
-##
-scp -o "StrictHostKeyChecking no" -i master/connect-to-master.pem ubuntu@GLOBAL_MASTER_ID:admin.conf .
-  # the certificate will not  be validated : kubectl --kubeconfig ./admin.conf --insecure-skip-tls-verify get nodes
-kubectl --kubeconfig ./admin.conf get nodes
-
-
-## or, to make this cluster the one by default
-mkdir -p $HOME/.kube
-scp -o "StrictHostKeyChecking no" -i master/connect-to-master.pem ubuntu@GLOBAL_MASTER_ID:admin.conf $HOME/.kube/config
-kubectl get nodes
-
-#Dashboard
-kubectl --kubeconfig ./admin.conf proxy
-#Access the dashboard on:
-# http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
-
-
-
-##### TALK about the limitations=things to be done
-# only one master (see official site)
-# Auto scaling (pods and nodes)
-
-
-
-
-kubectl edit node ip-172-31-22-38.eu-west-1.compute.internal
+sudo kubeadm join --config kadmconf_wor.yml
