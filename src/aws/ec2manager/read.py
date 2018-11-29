@@ -10,24 +10,7 @@ API to read our instances in many ways.
 from boto3 import resource
 from fire import Fire
 from ...utils.python.config_parser import Parser
-
-class TagFilter:
-    """
-        To use to filter on the project tag to
-        get only the instances of our project.
-    """
-
-    @staticmethod
-    def get_filter():
-        """
-            Get the tag of the project store
-            in the instances.ini files,
-            and return the filter.
-        """
-        config = Parser.parse('instances.ini')
-        tag_key = config['INSTANCES']['tag_key']
-        tag_value = config['INSTANCES']['tag_value']
-        return {'Name': 'tag:'+tag_key, 'Values': [tag_value]}
+from .tagger import Tagger
 
 class Reader:
     """
@@ -73,7 +56,7 @@ class ReaderAll(Reader):
         """
             Return all the instances
         """
-        return resource('ec2').instances.filter(Filters=[TagFilter.get_filter()])
+        return resource('ec2').instances.filter(Filters=[Tagger.get_project_filter()])
 
 class ReaderRunning(Reader):
     """
@@ -85,7 +68,7 @@ class ReaderRunning(Reader):
         """
             Return the running instances
         """
-        return resource('ec2').instances.filter(Filters=[{'Name': 'instance-state-name', 'Values': ['running']}, TagFilter.get_filter()])
+        return resource('ec2').instances.filter(Filters=[{'Name': 'instance-state-name', 'Values': ['running']}, Tagger.get_project_filter()])
 
 class ReaderNotTerminated(Reader):
     """
@@ -98,7 +81,7 @@ class ReaderNotTerminated(Reader):
             Return the running instances
         """
         return resource('ec2').instances.filter(Filters=[{'Name': 'instance-state-name', 'Values': ["pending", \
-                                                        "running", "stopping", "stopped"]}, TagFilter.get_filter()])
+                                                        "running", "stopping", "stopped"]}, Tagger.get_project_filter()])
 
 class ReaderCli:
     """
