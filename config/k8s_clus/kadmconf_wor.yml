@@ -1,0 +1,9 @@
+apiVersion: kubeadm.k8s.io/v1alpha3
+kind: JoinConfiguration
+nodeRegistration:
+  kubeletExtraArgs:
+    cloud-provider: "aws"
+token: "yxddj3.7zcqr0inoe4v59qp"
+discoveryTokenUnsafeSkipCAVerification: true
+discoveryTokenAPIServers:
+  - 172.31.21.67:6443
