@@ -14,6 +14,9 @@ import os
 import time
 from pathlib import Path
 from ...utils.python.config_parser import Parser
+from .subnet import Subnet
+from .tagger import Tagger
+from .security import Security
 
 class Creator:
     """
@@ -31,16 +34,33 @@ class Creator:
         config = Parser.parse('instances.ini')
         ami_image_id = config['INSTANCES']['ami_id']
         instance_type = config['INSTANCES']['instance_type']
-        subnet_id = config['INSTANCES']['subnet_id']
         key_name = config['INSTANCES']['key_name']
-        tag_key = config['INSTANCES']['tag_key']
-        tag_value = config['INSTANCES']['tag_value']
-        security_group_id = config['INSTANCES']['security_group_id']
+        # Get back the subnet id
+        subnet = Subnet.get_our_subnet()
+        try:
+            subnet_id = Subnet.get_our_subnet().id
+        except Exception as e:
+            print(e)
+        default_security_group = Security.get_security_group(config["SECURITY"]["default_group_name"])
+        try:
+            default_security_group_id = default_security_group.id
+        except Exception as e:
+            print(e)
         # Create the ec2. WARNING : Stop this after
         try:
             print("Creator > Order to create the instances given.")
             instances = resource('ec2').create_instances(ImageId=ami_image_id, InstanceType=instance_type, MinCount=min_count,\
-                                                        MaxCount=max_count, SubnetId=subnet_id, KeyName=key_name, SecurityGroupIds=[security_group_id])
+                                                        MaxCount=max_count, KeyName=key_name,
+                                                        NetworkInterfaces=[
+                                                            {
+                                                                'DeviceIndex': 0,
+                                                                'SubnetId' : subnet_id,
+                                                                'Groups': [
+                                                                    default_security_group_id
+                                                                ],
+                                                                'AssociatePublicIpAddress': True
+                                                            }
+                                                        ])
             # Wait until each instances are running
             Creator._wait_until_created(instances)
             # Debug message
@@ -49,7 +69,7 @@ class Creator:
                 print("\t{}".format(instance.id))
             # Tag instances
             print("Creator > We will tag the instances")
-            Creator._tag_instances(instances, tag_key, tag_value)
+            Creator._tag_instances(instances)
         except Exception as exception:
             print(exception)
             print("Creator > Error during instances creation")
@@ -78,9 +98,10 @@ class Creator:
                 return False
         return True
 
-    def _tag_instances(instances, tag_key, tag_value):
+    def _tag_instances(instances):
         """
             Tag all the instances with the tag : 'tag_key => tag_value'
             TODO : Use DryRun and verification of the execution
         """
-        response = resource('ec2').create_tags(Resources = [instance.id for instance in instances], Tags=[{'Key': tag_key, 'Value': tag_value}])
+        for instance in instances:
+            Tagger.attach_on_project(instance.id)
