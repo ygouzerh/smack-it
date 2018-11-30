@@ -23,7 +23,7 @@ class Creator:
         Create ec2 instances
     """
     @staticmethod
-    def execute(min_count=1, max_count=1):
+    def execute(choice="worker", min_count=1, max_count=1):
         """
             WRAPPER
             Create an ec2 instance with an ami file,
@@ -35,6 +35,11 @@ class Creator:
         ami_image_id = config['INSTANCES']['ami_id']
         instance_type = config['INSTANCES']['instance_type']
         key_name = config['INSTANCES']['key_name']
+        if choice == "worker":
+            type_tag = config['INSTANCES']['worker_tag']
+        else:
+            type_tag = config['INSTANCES']['master_tag']
+
         # Get back the subnet id
         subnet = Subnet.get_our_subnet()
         try:
@@ -60,7 +65,11 @@ class Creator:
                                                                 ],
                                                                 'AssociatePublicIpAddress': True
                                                             }
-                                                        ])
+                                                        ],
+                                                        TagSpecifications=[{
+                                                            'ResourceType': 'instance',
+                                                            'Tags' : [{'Key':config['INSTANCES']['type_tag_name'], 'Value':type_tag}]
+                                                        }])
             # Wait until each instances are running
             Creator._wait_until_created(instances)
             # Debug message
