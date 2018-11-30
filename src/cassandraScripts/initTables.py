@@ -6,7 +6,7 @@ address = 'localhost'
 cluster = Cluster([address])
 session = cluster.connect()
 
-session.execute("""DROP KEYSPACE "emoji";""")
+session.execute("""DROP KEYSPACE IF EXISTS "emoji";""")
 #création du keyspace
 session.execute("""CREATE KEYSPACE "emoji" WITH replication = {'class' : 'SimpleStrategy', 'replication_factor' : 1};""")
 session.execute("""USE emoji;""")
