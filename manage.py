@@ -68,7 +68,6 @@ class Manage:
     @staticmethod
     def install():
         return Installator
-
-
+        
 if __name__ == '__main__':
     Fire(Manage)

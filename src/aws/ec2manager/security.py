@@ -105,9 +105,18 @@ class Security:
                 # TODO TRANSFORM IN JSON
                 IpPermissions=[
                     {'IpProtocol': 'tcp', 'FromPort': 80, 'ToPort': 80, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
-                    {'IpProtocol': 'tcp', 'FromPort': 22, 'ToPort': 22, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
+                    {'IpProtocol': 'tcp', 'FromPort': 22, 'ToPort': 22, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+                    {'IpProtocol': 'tcp', 'FromPort': 443, 'ToPort': 443, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+                    {'IpProtocol': 'tcp', 'FromPort': 6443, 'ToPort': 6443, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+                    {'IpProtocol': 'tcp', 'FromPort': 2379, 'ToPort': 2380, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+                    {'IpProtocol': 'tcp', 'FromPort': 10250, 'ToPort': 10250, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+                    {'IpProtocol': 'tcp', 'FromPort': 10251, 'ToPort': 10251, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+                    {'IpProtocol': 'tcp', 'FromPort': 30000, 'ToPort': 32767, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+                    {'IpProtocol': 'tcp', 'FromPort': 10252, 'ToPort': 10252, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
                 ]
             )
+            # Attach on project
+            Tagger.attach_on_project(security_group_id)
             print('Ingress Successfully Set %s' % data)
         except ClientError as e:
             print(e)
