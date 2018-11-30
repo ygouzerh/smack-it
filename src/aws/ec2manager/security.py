@@ -112,6 +112,8 @@ class Security:
                     {'IpProtocol': 'tcp', 'FromPort': 10250, 'ToPort': 10250, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
                     {'IpProtocol': 'tcp', 'FromPort': 10251, 'ToPort': 10251, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
                     {'IpProtocol': 'tcp', 'FromPort': 30000, 'ToPort': 32767, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+                    {'IpProtocol': 'tcp', 'FromPort': 10248, 'ToPort': 10248, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+                    {'IpProtocol': 'tcp', 'FromPort': 53, 'ToPort': 53, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
                     {'IpProtocol': 'tcp', 'FromPort': 10252, 'ToPort': 10252, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
                 ]
             )
