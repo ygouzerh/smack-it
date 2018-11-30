@@ -17,6 +17,7 @@ from ...utils.python.config_parser import Parser
 from .subnet import Subnet
 from .tagger import Tagger
 from .security import Security
+from .role import Role
 
 class Creator:
     """
@@ -66,6 +67,9 @@ class Creator:
                                                                 'AssociatePublicIpAddress': True
                                                             }
                                                         ],
+                                                        IamInstanceProfile={
+                                                            'Arn': Role.get_instance_profile().arn
+                                                        },
                                                         TagSpecifications=[{
                                                             'ResourceType': 'instance',
                                                             'Tags' : [{'Key':config['INSTANCES']['type_tag_name'], 'Value':type_tag}]

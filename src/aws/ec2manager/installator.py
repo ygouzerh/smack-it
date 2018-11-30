@@ -18,6 +18,7 @@ from .subnet import Subnet
 from .create import Creator
 from .ssh import Ssh
 from .deploy import Deployer
+from .role import Role
 
 class Installator:
     """
@@ -28,29 +29,12 @@ class Installator:
         print("Create key")
         config = Parser.parse('instances.ini')
         Security.create_default_key_pair()
-        print("Create vpc")
-        print("Checks if vpc already exists")
         client_aws = client('ec2')
         resource_aws = resource('ec2')
-        print("Create the policy")
-        # Create IAM client
-        iam = client('iam')
-        try:
-            response = iam.create_role(
-                RoleName=config["INSTANCES"]["SMACKAllAccess"],
-                AssumeRolePolicyDocument=json.dumps({
-                    "Version": "2012-10-17",
-                    "Statement": {
-                        "Effect": "Allow",
-                        "Principal": {"Service": "ec2.amazonaws.com"},
-                        "Action": "sts:AssumeRole"
-                    }
-                }),
-                Description='Give all access to all'
-            )
-        except Exception as e:
-            print(e)
+        print("Create the instance profile")
+        Role.create_instance_profile()
         # Create the vpc
+        print("Checks if vpc already exists")
         if Vpc.get_our_vpc() is not None:
             print("VPC already exists : need to clean")
             print(Cleaner.auto_terminate())
@@ -62,6 +46,19 @@ class Installator:
             #pc = Installator._get_vpcs()
             #vpc.create_tags(Tags=[{'Key': config['VPC']['tag_key'], 'Value': config['VPC']['tag_value']}])
             vpc.wait_until_available()
+            print("Authorize the dns resolution")
+            response = client_aws.modify_vpc_attribute(
+                EnableDnsHostnames={
+                    'Value': True
+                },
+                VpcId=vpc.id
+            )
+            response = client_aws.modify_vpc_attribute(
+                EnableDnsSupport={
+                    'Value': True
+                },
+                VpcId=vpc.id
+            )
             print('Create security group')
             Security.create_default_security_group(vpc.id)
             print("Create internet gateway")
@@ -80,10 +77,10 @@ class Installator:
             subnet = resource_aws.create_subnet(CidrBlock=config['SUBNETS']['cidr_block'], VpcId=vpc.id)
             route_table.associate_with_subnet(SubnetId=subnet.id)
             Tagger.attach_on_project(subnet.id)
-            print("Create instance profile")
-            instance_profile = resource('iam').InstanceProfile(config["INSTANCES"]["profile_name"])
-            instance_profile.add_role(RoleName='AdministratorAccess')
-            Tagger.attach_on_project(instance_profile.instance_profile_id)
+            # print("Create instance profile")
+            # instance_profile = resource('iam').InstanceProfile(config["INSTANCES"]["profile_name"])
+            # instance_profile.add_role(RoleName='AdministratorAccess')
+            # Tagger.attach_on_project(instance_profile.instance_profile_id)
         print("Create ec2 master")
         Creator.execute("master", 1, 1)
 
