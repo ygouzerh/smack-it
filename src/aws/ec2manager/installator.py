@@ -18,7 +18,6 @@ from .subnet import Subnet
 from .create import Creator
 from .ssh import Ssh
 from .deploy import Deployer
-from .role import Role
 
 class Installator:
     """
@@ -31,8 +30,6 @@ class Installator:
         Security.create_default_key_pair()
         client_aws = client('ec2')
         resource_aws = resource('ec2')
-        print("Create the instance profile")
-        Role.create_instance_profile()
         # Create the vpc
         print("Checks if vpc already exists")
         if Vpc.get_our_vpc() is not None:
@@ -77,10 +74,6 @@ class Installator:
             subnet = resource_aws.create_subnet(CidrBlock=config['SUBNETS']['cidr_block'], VpcId=vpc.id)
             route_table.associate_with_subnet(SubnetId=subnet.id)
             Tagger.attach_on_project(subnet.id)
-            # print("Create instance profile")
-            # instance_profile = resource('iam').InstanceProfile(config["INSTANCES"]["profile_name"])
-            # instance_profile.add_role(RoleName='AdministratorAccess')
-            # Tagger.attach_on_project(instance_profile.instance_profile_id)
         print("Create ec2 master")
         Creator.execute("master", 1, 1)
 

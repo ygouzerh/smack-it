@@ -52,6 +52,9 @@ class Creator:
             default_security_group_id = default_security_group.id
         except Exception as e:
             print(e)
+        # Init the role part
+        Role.reset()
+        Role.init()
         # Create the ec2. WARNING : Stop this after
         try:
             print("Creator > Order to create the instances given.")
