@@ -10,7 +10,7 @@ bootstrapTokens:
 ---
 kind: ClusterConfiguration
 apiVersion: kubeadm.k8s.io/v1alpha3
-kubernetesVersion: v1.12.0
+kubernetesVersion: v1.13.0
 apiServerExtraArgs:
   cloud-provider: "aws"
 controllerManagerExtraArgs:
