@@ -12,6 +12,7 @@ def repeat(sc):
     rows = session.execute("""SELECT * FROM pays""");
     for row in rows:
         print("Pays : {} . Emojis : {}".format(row.nom_pays, row.emojis))
+    # session.execute("""TRUNCATE pays"""); #Deleting selected tweets.
     s.enter(60, 1, repeat, (sc,))
 
 s.enter(60, 1, repeat, (s,))
