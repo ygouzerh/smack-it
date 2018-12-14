@@ -1,6 +1,8 @@
 apiVersion: kubeadm.k8s.io/v1alpha3
 kind: InitConfiguration
 nodeRegistration:
+  kubeletExtraArgs:
+    cloud-provider: "aws"
 bootstrapTokens:
 - token: "yxddj3.7zcqr0inoe4v59qp"
   description: "kubeadm bootstrap token"
@@ -8,6 +10,10 @@ bootstrapTokens:
 ---
 kind: ClusterConfiguration
 apiVersion: kubeadm.k8s.io/v1alpha3
+apiServerExtraArgs:
+  cloud-provider: "aws"
+controllerManagerExtraArgs:
+  cloud-provider: "aws"
 networking:
   dnsDomain: cluster.local
   podSubnet: 10.244.0.0/16
