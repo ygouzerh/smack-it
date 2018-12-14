@@ -44,7 +44,7 @@ class Role:
             response = client('iam').create_role(
                 RoleName=config["INSTANCES"]["role_name"],
                 Description='Give all access to all',
-                AssumeRolePolicyDocument='{"Version": "2012-10-17","Statement": {"Effect": "Allow","Principal": { "AWS" : "'+resource('iam').CurrentUser().arn+'" },"Action": "sts:AssumeRole"}}'
+                AssumeRolePolicyDocument='{"Version": "2012-10-17","Statement": {"Effect": "Allow","Principal": { "Service" : "ec2.amazonaws.com" },"Action": "sts:AssumeRole"}}'
             )
             print("We have created the default role")
             client('iam').attach_role_policy(
@@ -101,9 +101,9 @@ class Role:
             Reset all the configuration.
         """
         pass
-        #print("Delete the instance profile")
+        print("Delete the instance profile")
         #Role.delete_instance_profile()
-        #print("Delete the default role")
+        print("Delete the default role")
         #Role.delete_role()
 
     @staticmethod
