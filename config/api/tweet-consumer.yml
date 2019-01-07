@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: tweet-consumer
+spec:
+  containers:
+  - image: machine424/tweet-consumer
+    name: tweet-consumer
+    imagePullPolicy: Always
