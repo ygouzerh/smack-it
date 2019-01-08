@@ -28,7 +28,6 @@ scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev
 scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ssh/Smackey ./config/k8s_clus/storage-class.yml "$master":~/
 scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ssh/Smackey ./automation/master_install.sh "$master":~/
 scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ssh/Smackey ./automation/common_install.sh "$master":~/
-scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ssh/Smackey ./automation/kafka_cluster.sh "$master":~/
 
 echo "Connect to the master to launch the installation phase"
 echo "Connection to $master"
@@ -37,6 +36,7 @@ ssh -o IdentitiesOnly=yes -T -o "StrictHostKeyChecking no" -i ssh/Smackey "$mast
 echo "------ INSTALLATION --------"
 sudo ./common_install.sh
 sudo ./master_install.sh
+sudo kubectl apply -f storage-class.yml
 EOF
 
 echo "-- Workers configuration --"
@@ -59,19 +59,8 @@ do
 EOF
 done
 
+echo "------ KAFKA CLUSTER INSTALLATION --------"
 
-echo "Copying kafka manifests to the master"
-for filename in config/kafka_clus/*.yml; do
-  scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ssh/Smackey "$filename" "$master":~/
-done
+cd ./automation
 
-
-# According to the manifests,the cluster will contain one broker and one zookeeper (can be modified)
-echo "Connect to the master to deploy kafka cluster"
-echo "Connection to $master"
-# Launch the command on the master
-ssh -o IdentitiesOnly=yes -T -o "StrictHostKeyChecking no" -i ssh/Smackey "$master" << EOF
-echo "------ KAFKA CLUSTER DEPLOYMENT --------"
-kubectl apply -f storage-class.yml
-sudo ./kafka_cluster.sh
-EOF
+./auto_kafka.sh
