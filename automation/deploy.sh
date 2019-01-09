@@ -67,3 +67,16 @@ echo "------ KAFKA CLUSTER INSTALLATION --------"
 cd ./automation
 
 ./auto_kafka.sh
+echo "Copying cassandra manifests to the master"
+for filename in config/cassandra_clus/*.yml; do
+  scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ssh/Smackey "$filename" "$master":~/
+done
+
+# According to the manifests, the cluster will contain two nodes (can be modified)
+echo "Connect to the master to deploy cassandra cluster"
+echo "Connection to $master"
+# Launch the command on the master
+ssh -o IdentitiesOnly=yes -T -o "StrictHostKeyChecking no" -i ssh/Smackey "$master" << EOF
+echo "------ KAFKA CLUSTER DEPLOYMENT --------"
+sudo ./cassandra_cluster.sh
+EOF
