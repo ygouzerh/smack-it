@@ -26,17 +26,20 @@ echo "  - $master_public_ip:6443" >> ./config/k8s_clus/kadmconf_wor.yml
 echo "Copy configuration files and manifests to the master"
 scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ssh/Smackey ./config/k8s_clus/kadmconf_mas.yml "$master":~/
 scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ssh/Smackey ./config/k8s_clus/storage-class.yml "$master":~/
-scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ssh/Smackey ./automation/master_install.sh "$master":~/
+scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ssh/Smackey ./automation/master_install_*.sh "$master":~/
 scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ssh/Smackey ./automation/common_install.sh "$master":~/
 
 echo "Connect to the master to launch the installation phase"
 echo "Connection to $master"
 # Launch the commands on the master
+# Need to cut the installation in three, because master_install_1 need to be executed as the user
 ssh -o IdentitiesOnly=yes -T -o "StrictHostKeyChecking no" -i ssh/Smackey "$master" << EOF
 echo "------ INSTALLATION --------"
 sudo ./common_install.sh
-sudo ./master_install.sh
-sudo kubectl apply -f storage-class.yml
+sudo ./master_install_0.sh
+./master_install_1.sh
+sudo ./master_install_2.sh
+kubectl apply -f storage-class.yml
 EOF
 
 echo "-- Workers configuration --"
