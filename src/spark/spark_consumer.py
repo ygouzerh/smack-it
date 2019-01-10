@@ -8,10 +8,13 @@ from pyspark.streaming import StreamingContext
 from pyspark.streaming.kafka import KafkaUtils
 
 
-countries = ["france"]
 
 
 if __name__ == "__main__":
+
+    cassandra-db = ['cassandra-db']
+    spark = SparkSession.builder.appName('SMACKITSTORE') \
+        .config('spark.cassandra.connection.host', ','.join(cassandra-db)).getOrCreate()
 
     sc = SparkContext(appName="TweetesProcessing")
     ssc = StreamingContext(sc, 10)
@@ -35,6 +38,10 @@ if __name__ == "__main__":
     counts = kvs.flatMap(lambda m: (m[0], m[1].split(","))) \
         .map(lambda (c, emo): (c, (, ))) \
         .reduceByKey(lambda a, b: a+b)
+        .
+
+
+
     counts.pprint()
 
     ssc.start()
