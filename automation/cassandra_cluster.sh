@@ -4,3 +4,4 @@
 kubectl apply -f cassandra-service-headless.yml
 kubectl apply -f cassandra-service.yml
 kubectl apply -f cassandra-statefulset.yml
+kubectl apply -f cassandra-create-table.yml

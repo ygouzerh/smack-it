@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: create-table-cassandra
+spec:
+  containers:
+  - image: machine424/create-table-cassandra
+    name: create-table-cassandra
+    imagePullPolicy: Always
