@@ -1,7 +1,8 @@
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
-
+import json
+import listOfEmojis
 #Variables that contains yours credentials to access Twitter API
 access_token = "1971815509-Nqhhs9Kk9BW8IDXcdGWRKVA23HpAIjvsFbKFNpv"
 access_token_secret =  "Kzst7eHw8hBakWmgGZyQnQaCwJYs22XwGSUOzdmJyFRjn"
@@ -13,10 +14,18 @@ class StdOutListener(StreamListener):
     This is a basic listener that just prints received tweets to stdout.
     """
     def on_status(self, status):
-        print(status.text)
+        if status.place:
+            print(status.text)
+            print(status.place.country)
+            with open('tweets.json','a+') as outfile:
+                json.dump(status._json, outfile)
+                outfile.write("\n")
 
     def on_error(self, status):
         print(status)
+        if status == 420:
+            print("Rate limit reached. Disconnecting.")#returning False in on_data disconnects the stream
+            return False
 
 if __name__ == '__main__':
     l = StdOutListener()
@@ -24,4 +33,11 @@ if __name__ == '__main__':
     auth.set_access_token(access_token, access_token_secret)
 
     stream = Stream(auth, l)
-    stream.filter(track=['happy'])
+    emojiList = []
+    for emoji in listOfEmojis.veryPositive+listOfEmojis.positive+listOfEmojis.negative+listOfEmojis.veryNegative:
+        emojiList.append(chr(int(emoji, 16)))
+    # stream.filter(track=["France","football","sport","soccer","basket","happy","sad","emoji","a","i","the", "to", "of", "and", "e", "o", "y", "la", "un", "hello", "chocolate", "Coca-Cola", "louse", "google", "twitter"])
+    stream.filter(track=emojiList)
+
+
+# id pays id_emoji nb_occurence date

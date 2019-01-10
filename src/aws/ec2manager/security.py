@@ -104,18 +104,19 @@ class Security:
             data = ec2.authorize_security_group_ingress(GroupId=security_group_id,
                 # TODO TRANSFORM IN JSON
                 IpPermissions=[
-                    {'IpProtocol': 'tcp', 'FromPort': 80, 'ToPort': 80, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
-                    {'IpProtocol': 'tcp', 'FromPort': 22, 'ToPort': 22, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
-                    {'IpProtocol': 'tcp', 'FromPort': 0, 'ToPort': 65535, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
-                    {'IpProtocol': 'tcp', 'FromPort': 443, 'ToPort': 443, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
-                    {'IpProtocol': 'tcp', 'FromPort': 6443, 'ToPort': 6443, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
-                    {'IpProtocol': 'tcp', 'FromPort': 2379, 'ToPort': 2380, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
-                    {'IpProtocol': 'tcp', 'FromPort': 10250, 'ToPort': 10250, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
-                    {'IpProtocol': 'tcp', 'FromPort': 10251, 'ToPort': 10251, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
-                    {'IpProtocol': 'tcp', 'FromPort': 30000, 'ToPort': 32767, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
-                    {'IpProtocol': 'tcp', 'FromPort': 10248, 'ToPort': 10248, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
-                    {'IpProtocol': 'tcp', 'FromPort': 53, 'ToPort': 53, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
-                    {'IpProtocol': 'tcp', 'FromPort': 10252, 'ToPort': 10252, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
+                    {'IpProtocol': -1, 'FromPort': 0, 'ToPort': 65635, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
+                    # {'IpProtocol': 'tcp', 'FromPort': 80, 'ToPort': 80, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+                    # {'IpProtocol': 'tcp', 'FromPort': 22, 'ToPort': 22, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+                    # {'IpProtocol': 'tcp', 'FromPort': 0, 'ToPort': 65535, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+                    # {'IpProtocol': 'tcp', 'FromPort': 443, 'ToPort': 443, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+                    # {'IpProtocol': 'tcp', 'FromPort': 6443, 'ToPort': 6443, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+                    # {'IpProtocol': 'tcp', 'FromPort': 2379, 'ToPort': 2380, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+                    # {'IpProtocol': 'tcp', 'FromPort': 10250, 'ToPort': 10250, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+                    # {'IpProtocol': 'tcp', 'FromPort': 10251, 'ToPort': 10251, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+                    # {'IpProtocol': 'tcp', 'FromPort': 30000, 'ToPort': 32767, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+                    # {'IpProtocol': 'tcp', 'FromPort': 10248, 'ToPort': 10248, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+                    # {'IpProtocol': 'tcp', 'FromPort': 53, 'ToPort': 53, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
+                    # {'IpProtocol': 'tcp', 'FromPort': 10252, 'ToPort': 10252, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
                 ]
             )
             # Attach on project
