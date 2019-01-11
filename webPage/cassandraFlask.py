@@ -26,39 +26,33 @@ positive = ["1F605","1F642","1F609","1F60A","1F607","1F617","263A","1F61A","1F61
 negative = ["1F612","1F637","1F912","1F915","1F922","1F92E","1F927","1F615","1F61F","1F641","2639","1F97A","1F626","1F628","1F631","1F616","1F61E"]
 veryNegative = ["1F625","1F622","1F62D","1F623","1F629","1F62B","1F624","1F621","1F620","1F92C","1F480","1F4A9","1F494","1F44E"]
 
+def convertToEmoji(strList):
+    emoList = []
+    for e in strList:
+        emoList.append(chr(int(e,16)))
+    return emoList
+
+
 def calcSentimentScore(emojiDico):
     """Returns a score (from 0 to 100) representing the sentiment from the emojis"""
     score = 0
     nbEmoScored = 0
     for emoji, nbOcc in emojiDico.items():
-        if emoji in veryPositive:
+        if emoji in veryPositive or emoji in convertToEmoji(veryPositive):
             score += 100*nbOcc
             nbEmoScored += nbOcc
-        elif emoji in positive:
+        elif emoji in positive or emoji in convertToEmoji(positive):
             score += 75*nbOcc
             nbEmoScored += nbOcc
-        elif emoji in negative:
+        elif emoji in negative or emoji in convertToEmoji(negative):
             score += 25*nbOcc
             nbEmoScored += nbOcc
-        elif emoji in veryNegative:
+        elif emoji in veryNegative or emoji in convertToEmoji(veryNegative):
             nbEmoScored += nbOcc
     if nbEmoScored == 0 :
         return 50
     score = score/nbEmoScored
     return round(score)
-
-
-@app.route("/cassandra_test")
-def cassandra_test():
-
-    cluster = Cluster(['localhost'])
-    session = cluster.connect("emoji")
-	#rows = session.execute('SELECT id, nom_pays, lat, long, emojis FROM PAYS')
-    r = session.execute("SELECT * FROM pays")
-    return str(r[0])
-    #for user_row in rows:
-         #print (user_row.id, user_row.nom_pays, user_row.lat)
-          # s=s+"L.marker(["+str(rows[user_row].lat)+","+str(rows[user_row].long)+"]).addTo(map).bindPopup('<strong>"+str(rows[user_row].nom_pays)+"</strong>.').openPopup();"
 
 @app.route("/cassandraCall/<pays>")
 def cassandraCall(pays):
