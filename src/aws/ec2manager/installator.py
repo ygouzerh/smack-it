@@ -35,6 +35,9 @@ class Installator:
         if Vpc.get_our_vpc() is not None:
             print("VPC already exists : need to clean")
             print(Cleaner.auto_terminate())
+            if Security.get_security_group(config["SECURITY"]["default_group_name"]) is None:
+                print("Need to create a securiy group")
+                Security.create_default_security_group(Vpc.get_vpcs()[0]["VpcId"])
         else:
             print('Need to create a vpc')
             vpc = resource_aws.create_vpc(CidrBlock=config['VPC']['cidr_block'])

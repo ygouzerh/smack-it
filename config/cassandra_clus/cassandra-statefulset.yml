@@ -19,8 +19,8 @@ spec:
       containers:
       - name: cassandra
         image: gcr.io/google-samples/cassandra:v13
-        command: ["/bin/sh"]
-        args: ["-c", "sudo sed -i -r 's/enable_user_defined_functions: false/enable_user_defined_functions: true/' /etc/cassandra/cassandra.yaml ; /run.sh "]
+        # command: ["/bin/sh"]
+        # args: ["-c", "sudo sed -i -r 's/enable_user_defined_functions: false/enable_user_defined_functions: true/' /etc/cassandra/cassandra.yaml ; /run.sh "]
         imagePullPolicy: Always
         ports:
         - containerPort: 7000
