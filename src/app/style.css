@@ -1,0 +1,4 @@
+.a { /* Normalize colour to a primary red */
+    font-size: 50px;
+    filter: sepia(1) saturate(100);
+}

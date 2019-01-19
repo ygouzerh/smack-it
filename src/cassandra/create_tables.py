@@ -13,14 +13,12 @@ session.execute("""CREATE KEYSPACE "emoji" WITH replication = {'class' : 'Simple
 session.execute("""USE emoji;""")
 #création table
 session.execute("""CREATE TABLE EMOJI_PACKAGE(id UUID PRIMARY KEY, pays text, id_emoji text, nb_occurence int, package_date timestamp);""")
-session.execute(""" CREATE FUNCTION IF NOT EXISTS timeAgo(seconds int)
-  CALLED ON NULL INPUT
-  RETURNS timestamp
-  LANGUAGE java AS '
-    long now = System.currentTimeMillis();
-    if (seconds == null)
-      return new Date(now);
-    return new Date(now - (seconds.intValue() * 1000));
-  ';""")
-#pour generer un id aleatoire : uuid()
-#example : INSERT INTO truc(id) VALUES (uuid())
+
+r = session.execute("""SELECT * FROM EMOJI_PACKAGE;""")
+
+for row in r:
+    prints(row.pays, row.id_emoji, row.nb_occurence)
+
+
+session.shutdown()
+cluster.shutdown()

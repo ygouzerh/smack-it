@@ -1,48 +1,34 @@
-
-from __future__ import print_function
-
 import sys
-
 from pyspark import SparkContext
 from pyspark.streaming import StreamingContext
 from pyspark.streaming.kafka import KafkaUtils
+from cassandra.cluster import Cluster
 
+def traitement(rdd):
+    rdd.foreach(lambda record: sendCassandra(record))
+
+def sendCassandra(record):
+    cs_cluster = Cluster(['cassandra-db'])
+    cs_session = cs_cluster.connect("emoji")
+    cs_session.execute("INSERT INTO EMOJI_PACKAGE (id, pays, id_emoji, nb_occurence, package_date) VALUES (now(),%s,%s,%s,toTimestamp(now())) ",[record[0],record[1],record[2]])
 
 
 
 if __name__ == "__main__":
 
-    cassandra-db = ['cassandra-db']
-    spark = SparkSession.builder.appName('SMACKITSTORE') \
-        .config('spark.cassandra.connection.host', ','.join(cassandra-db)).getOrCreate()
-
-    sc = SparkContext(appName="TweetesProcessing")
+    sc = SparkContext(appName="SMACKIT")
     ssc = StreamingContext(sc, 10)
 
-    # decodes the key-value kafka message using utf-8 decoder
     kvs = KafkaUtils.createStream(ssc, "kafka-zookeeper:2181", "test-consumer-group", {"emojis": 1})
+    counts = kvs.flatMap(lambda m: [(m[0], em) for em in  m[1].split(",")]) \
+        .map(lambda m: (m, 1)) \
+        .reduceByKey(lambda a, b: a+b) \
+        .map(lambda m: (m[0][0], m[0][1], m[1])) \
+        .foreachRDD(traitement)
 
-    # will create receivers and consume the Kafka topics
-    # explication for c:1 : https://stackoverflow.com/questions/48161253/what-is-the-correct-way-to-use-the-topics-parameter-in-kafkautils-createstream
-    # and https://spark.apache.org/docs/1.6.1/streaming-kafka-integration.html (points to remember)
-    #kafkaStreams = [KafkaUtils.createStream(ssc, "kafka-zookeeper:2181", {c:1}) for c in countries]
-    #kvs = streamingContext.union(*kafkaStreams)
-
-    # Just one topic: tweets
-    # get (country, emojies)
-    # lines = kvs.map(lambda m: (m[0], m[1]))
-
-    #lines = kvs.map(lambda x: x[1])
-    # counts = lines.flatMap(lambda line: line.replace('"',"").replace("'","").split(",")) \
-    #counts = lines.flatMap(lambda line: line.split(",")) \
-    counts = kvs.flatMap(lambda m: (m[0], m[1].split(","))) \
-        .map(lambda (c, emo): (c, (, ))) \
-        .reduceByKey(lambda a, b: a+b)
-        .
-
-
-
-    counts.pprint()
 
     ssc.start()
     ssc.awaitTermination()
+
+    #cs_session.shutdown();
+    #cs_cluster.shutdown();
