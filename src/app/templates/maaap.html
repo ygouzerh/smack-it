@@ -78,7 +78,7 @@
       if (e.latlng.lat == 51.3419134) {
         pays = "Allemagne";
       }
-      $.get('http://127.0.0.1:5000/cassandraCall/'+pays,
+      $.get('/cassandraCall/'+pays,
       function(data) {
         popup
         .setLatLng(e.latlng)

@@ -6,7 +6,7 @@ cd ..
 # Get master
 echo "Retrieve the master..."
 #master_public_ip=$(./manage.py read type get-master-public-ip)
-master="ubuntu@34.242.47.132"
+master="ubuntu@34.242.218.115"
 
 scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /Users/ayoubmrini424/k8s/master/connect-to-master.pem ./automation/kafka_cluster.sh "$master":~/
 
