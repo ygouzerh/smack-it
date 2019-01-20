@@ -108,15 +108,6 @@ echo "------ CASSANDRA CLUSTER DEPLOYMENT --------"
 sudo ./cassandra_cluster.sh
 EOF
 
-echo "------ SPARK CLUSTER INSTALLATION --------"
-echo "Connect to the master to deploy spark cluster"
-echo "Connection to $master"
-
-ssh -o IdentitiesOnly=yes -T -o "StrictHostKeyChecking no" -i /Users/ayoubmrini424/k8s/master/connect-to-master.pem "$master" << EOF
-echo "------ SPARK CLUSTER DEPLOYMENT --------"
-sudo ./spark_env.sh
-EOF
-
 echo "------ START SENDING TWEETS --------"
 ssh -o IdentitiesOnly=yes -T -o "StrictHostKeyChecking no" -i /Users/ayoubmrini424/k8s/master/connect-to-master.pem "$master" << EOF
 kubectl apply -f tweet-producer.yml
