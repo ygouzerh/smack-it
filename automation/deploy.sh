@@ -8,6 +8,12 @@ mkdir -p ssh/
 
 # Create the aws infrastructure
 ./manage.py install run
+if [ $? -eq 0 ]; then
+    echo "AWS INFRASTRUCTURE : SUCCESS"
+else
+    echo "AWS INFRASTRUCTURE : FAIL"
+    exit 1;
+fi
 
 # Get master
 echo "Retrieve the master..."
