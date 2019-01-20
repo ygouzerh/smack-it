@@ -64,3 +64,11 @@ class Tagger:
             Get the tag for k8s
         """
         return Tagger.create_tag("kubernetes.io/cluster/kubernetes", "owned")
+
+    @staticmethod
+    def project_get_tag():
+        """
+            Get the tag for the project
+        """
+        config = Parser.parse('instances.ini')
+        return Tagger.create_tag(config['GENERAL']['project_name_key'], config['GENERAL']['project_name_value'])

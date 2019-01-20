@@ -46,9 +46,6 @@ class Creator:
         subnet_id = Subnet.get_our_subnet().id
         default_security_group = Security.get_security_group(config["SECURITY"]["default_group_name"])
         default_security_group_id = default_security_group.id
-        # Init the role part
-        Role.reset()
-        Role.init()
         # Create the ec2. WARNING : Stop this after
         try:
             print("Creator > Order to create the instances given.")

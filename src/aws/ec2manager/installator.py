@@ -18,6 +18,7 @@ from .subnet import Subnet
 from .create import Creator
 from .ssh import Ssh
 from .deploy import Deployer
+from .role import Role
 
 class Installator:
     """
@@ -77,6 +78,10 @@ class Installator:
             subnet = resource_aws.create_subnet(CidrBlock=config['SUBNETS']['cidr_block'], VpcId=vpc.id)
             route_table.associate_with_subnet(SubnetId=subnet.id)
             Tagger.attach_on_project(subnet.id)
+        print("Reset role part config")
+        # Init the role part
+        # Role.reset()
+        # Role.init()
         print("Create ec2 master")
         Creator.execute("master", 1, 1)
 
