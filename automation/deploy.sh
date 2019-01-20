@@ -33,20 +33,20 @@ scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev
 scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ssh/Smackey ./automation/master_install_*.sh "$master":~/
 scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ssh/Smackey ./automation/common_install.sh "$master":~/
 
-scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /Users/ayoubmrini424/k8s/master/connect-to-master.pem ./automation/cassandra_cluster.sh "$master":~/
+scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ssh/Smackey ./automation/cassandra_cluster.sh "$master":~/
 
 # Send pyspark application to the master
-scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /Users/ayoubmrini424/k8s/master/connect-to-master.pem ./src/spark/spark_consumer.py "$master":~/
-scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /Users/ayoubmrini424/k8s/master/connect-to-master.pem ./src/spark/Dockerfile "$master":~/
-scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /Users/ayoubmrini424/k8s/master/connect-to-master.pem ./config/spark/spark-submit.yml "$master":~/
+scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ssh/Smackey ./src/spark/spark_consumer.py "$master":~/
+scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ssh/Smackey ./src/spark/Dockerfile "$master":~/
+scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ssh/Smackey ./config/spark/spark-submit.yml "$master":~/
 
 
 # Send tweets producer yaml to the master
-scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /Users/ayoubmrini424/k8s/master/connect-to-master.pem ./config/api/tweet-producer.yml "$master":~/
+scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ssh/Smackey ./config/api/tweet-producer.yml "$master":~/
 
 # Send web appli yamls to the master
-scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /Users/ayoubmrini424/k8s/master/connect-to-master.pem ./config/app/app-f.yml "$master":~/
-scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i /Users/ayoubmrini424/k8s/master/connect-to-master.pem ./config/app/app-f-service.yml "$master":~/
+scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ssh/Smackey ./config/app/app-f.yml "$master":~/
+scp -o IdentitiesOnly=yes -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ssh/Smackey ./config/app/app-f-service.yml "$master":~/
 
 
 
