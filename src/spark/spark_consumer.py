@@ -4,14 +4,14 @@ from pyspark.streaming import StreamingContext
 from pyspark.streaming.kafka import KafkaUtils
 from cassandra.cluster import Cluster
 
-def traitement(rdd):
-    rdd.foreach(lambda record: sendCassandra(record))
 
-def sendCassandra(record):
+def sendCassandra(iter):
     cs_cluster = Cluster(['cassandra-db'])
     cs_session = cs_cluster.connect("emoji")
-    cs_session.execute("INSERT INTO EMOJI_PACKAGE (id, pays, id_emoji, nb_occurence, package_date) VALUES (now(),%s,%s,%s,toTimestamp(now())) ",[record[0],record[1],record[2]])
-
+    for record in iter:
+        cs_session.execute("INSERT INTO EMOJI_PACKAGE (id, pays, id_emoji, nb_occurence, package_date) VALUES (now(),%s,%s,%s,toTimestamp(now())) ",[record[0],record[1],record[2]])
+    cs_session.shutdown();
+    cs_cluster.shutdown();
 
 
 if __name__ == "__main__":
@@ -24,11 +24,8 @@ if __name__ == "__main__":
         .map(lambda m: (m, 1)) \
         .reduceByKey(lambda a, b: a+b) \
         .map(lambda m: (m[0][0], m[0][1], m[1])) \
-        .foreachRDD(traitement)
+        .foreachRDD(lambda rdd: rdd.foreachPartition(sendCassandra))
 
 
     ssc.start()
     ssc.awaitTermination()
-
-    #cs_session.shutdown();
-    #cs_cluster.shutdown();

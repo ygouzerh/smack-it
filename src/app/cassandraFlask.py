@@ -3,17 +3,17 @@ from flask_googlemaps import GoogleMaps
 from flask_googlemaps import Map
 from cassandra.cluster import Cluster
 import random
+from flask_cors import CORS
 
 
 
 app = Flask(__name__)
-#cassandra = CassandraCluster()
+CORS(app)
 GoogleMaps(app)
 
 address = 'cassandra-db'
 cluster = Cluster([address])
 session = cluster.connect("emoji")
-#app.config['CASSANDRA_NODES'] = ['cassandra-c1.terbiumlabs.com']  # can be a string or list of nodes
 
 
 veryPositive = ["1F600","1F603","1F604","1F601","1F606","1F923","1F602","1F970","1F60D","1F929","1F618","1F60B","1F61B","1F61C","1F61D","1F911","1F917","1F60E","1F44D"]
