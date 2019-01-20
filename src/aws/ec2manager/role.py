@@ -86,7 +86,8 @@ class Role:
     def delete_instance_profile():
         """
             Delete the default instance profile.
-            Check if exists
+            Check if exists.
+            Warning : Deprecated, as it has unarbitrary behavior. Need to be better tested.
         """
         config = Parser.parse('instances.ini')
         instance_profile = Role.get_instance_profile()
@@ -104,11 +105,57 @@ class Role:
                         role.detach_policy(
                             PolicyArn=policy.arn
                         )
+                    for instance in role.instance_profiles.all():
+                        print("INSTANCE PROFILE : ", instance)
                     client('iam').delete_role(RoleName=role.name)
                     print("...Role deleted")
             print("...Remove instance profile")
             client('iam').delete_instance_profile(InstanceProfileName=config["INSTANCES"]["profile_name"])
             print("...Default instance deleted")
+
+    @staticmethod
+    def delete_role(role_name):
+        """
+            Delete role and all ressources associated
+        """
+        role = Role.get_role(role_name)
+        if role is not None :
+            print("## Start deletion of : "+role_name+" ##")
+            # Delete all instance profiles associated
+            for instance_profile in role.instance_profiles.all():
+                print("..Remove "+instance_profile.name)
+                client('iam').remove_role_from_instance_profile(InstanceProfileName=instance_profile.name,
+                    RoleName=role.name)
+                # Delete recursively other instance profile's roles
+                for instance_role in instance_profile.roles:                    
+                    # Verify that we do not start the same process, as we could have consistency problems
+                    if instance_role.name != role.name:
+                        print("..Start the process of role deletion \
+                                for instance profile : {} with role : {}".format(instance_profile.name, instance_role.name))
+                        Role.delete_role(instance_role.name)
+                # Delete instance profile
+                print("..Delete instance : ", instance_profile.name)
+                client('iam').delete_instance_profile(InstanceProfileName=instance_profile.name)
+            # Delete policies associated
+            for policy in role.attached_policies.all():
+                print("..Detach policy : ", policy.arn)
+                role.detach_policy(
+                    PolicyArn=policy.arn
+                )
+                # The policy is not delete as it is AWS's managed policy
+            # Delete the role
+            print("..Deletion END")
+            client('iam').delete_role(RoleName=role.name)
+        else:
+            print("No need to delete "+role_name+", because he no longer exist")
+
+    @staticmethod
+    def delete_default_role():
+        """
+            Delete the default role and all ressources associated
+        """
+        config = Parser.parse('instances.ini')
+        Role.delete_role(config["INSTANCES"]["role_name"])
 
     @staticmethod
     def get_instance_profile():
@@ -140,4 +187,4 @@ class Role:
             Reset all the configuration.
         """
         print("Delete the instance profile and the associated roles")
-        Role.delete_instance_profile()
+        Role.delete_default_role()

@@ -8,6 +8,7 @@ Start the installation
 """
 
 import json
+from time import sleep
 from boto3 import resource, client
 from ...utils.python.config_parser import Parser
 from .security import Security
@@ -48,40 +49,47 @@ class Installator:
             #vpc.create_tags(Tags=[{'Key': config['VPC']['tag_key'], 'Value': config['VPC']['tag_value']}])
             vpc.wait_until_available()
             print("Authorize the dns resolution")
-            response = client_aws.modify_vpc_attribute(
+            # Activate dns
+            client_aws.modify_vpc_attribute(
                 EnableDnsHostnames={
                     'Value': True
                 },
                 VpcId=vpc.id
             )
-            response = client_aws.modify_vpc_attribute(
+            client_aws.modify_vpc_attribute(
                 EnableDnsSupport={
                     'Value': True
                 },
                 VpcId=vpc.id
             )
+            # Create security group
             print('Create security group')
             Security.create_default_security_group(vpc.id)
             print("Create internet gateway")
-            # create then attach internet gateway
+            # Create then attach internet gateway
             gateway = resource_aws.create_internet_gateway()
             print(gateway.id)
             vpc.attach_internet_gateway(InternetGatewayId=(gateway.id))
             Tagger.attach_on_project(gateway.id)
+            # Create route table
             print("Create route table")
             route_table = vpc.create_route_table()
-            route = route_table.create_route(
+            route_table.create_route(
                 DestinationCidrBlock='0.0.0.0/0',
                 GatewayId=gateway.id
             )
+            # Create subnet
             print("Create subnet")
             subnet = resource_aws.create_subnet(CidrBlock=config['SUBNETS']['cidr_block'], VpcId=vpc.id)
             route_table.associate_with_subnet(SubnetId=subnet.id)
             Tagger.attach_on_project(subnet.id)
         print("Reset role part config")
-        # Init the role part
-        # Role.reset()
-        # Role.init()
+        # Init the role part : need some time to be take in account.
+        Role.reset()
+        sleep(60)
+        Role.init()
+        sleep(60)
+        # Create the EC2
         print("Create ec2 master")
         Creator.execute("master", 1, 1)
 
