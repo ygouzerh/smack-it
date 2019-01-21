@@ -1,13 +1,13 @@
 # Contributing guidelines
 
-* Language : english for all. Better for the accent management.
+* Language : english for all. Better for the project management and the "accent" management.
 
 * To add a modification, create a new branch, and then ask for a pull request to put your modifications on master.
 
 * Create a new branch only from `master`, to start from solid basis.
 
 * Never perform a `git add .` or a `git add --all`, unless you know exactly what you are trying to do, in order to add only the files we wanted and not
-save generated files like cache files. If a file was commited, it is quite difficult to erase him from the git history. Always perform `git add filename`
+save generated files like cache files. If a file was committed, it is quite difficult to erase him from the git history. Always perform `git add filename`
 
 * When you review a branch, be careful to the possible generated files unwanted.
 
