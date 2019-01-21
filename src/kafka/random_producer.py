@@ -2,7 +2,7 @@ from kafka import KafkaProducer
 import json
 import time
 import emoji
-
+from random import choice
 
 tweets = ["😀","😀","😀","😀","😀","😡","😡","😡","😡","😡"]
 countries = ["France", "Espagne", "Maroc", "Canada", "USA", "Algerie", "Japon", "Russie", "AfriqueDuSud", "Allemagne"]
@@ -19,8 +19,7 @@ def extract_emojis(tweet):
 
 while 1:
 
-    for i, c in enumerate(countries) :
-        producer.send('emojis', key=c.encode('utf-8'), value=extract_emojis(tweets[i]).encode('utf-8'))
+    producer.send('emojis', key=choice(countries).encode('utf-8'), value=extract_emojis(choice(tweets)).encode('utf-8'))
 
 
-    time.sleep(0.1)
+    time.sleep(0.001)
