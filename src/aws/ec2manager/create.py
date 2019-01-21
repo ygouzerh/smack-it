@@ -43,18 +43,9 @@ class Creator:
 
         # Get back the subnet id
         subnet = Subnet.get_our_subnet()
-        try:
-            subnet_id = Subnet.get_our_subnet().id
-        except Exception as e:
-            print(e)
+        subnet_id = Subnet.get_our_subnet().id
         default_security_group = Security.get_security_group(config["SECURITY"]["default_group_name"])
-        try:
-            default_security_group_id = default_security_group.id
-        except Exception as e:
-            print(e)
-        # Init the role part
-        Role.reset()
-        Role.init()
+        default_security_group_id = default_security_group.id
         # Create the ec2. WARNING : Stop this after
         try:
             print("Creator > Order to create the instances given.")
@@ -114,6 +105,7 @@ class Creator:
                 return False
         return True
 
+    @staticmethod
     def _tag_instances(instances):
         """
             Tag all the instances with the tag : 'tag_key => tag_value'

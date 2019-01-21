@@ -104,7 +104,7 @@ class Security:
             data = ec2.authorize_security_group_ingress(GroupId=security_group_id,
                 # TODO TRANSFORM IN JSON
                 IpPermissions=[
-                    {'IpProtocol': -1, 'FromPort': 0, 'ToPort': 65635, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
+                    {'IpProtocol': "-1", 'FromPort': 0, 'ToPort': 65635, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]}
                     # {'IpProtocol': 'tcp', 'FromPort': 80, 'ToPort': 80, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
                     # {'IpProtocol': 'tcp', 'FromPort': 22, 'ToPort': 22, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
                     # {'IpProtocol': 'tcp', 'FromPort': 0, 'ToPort': 65535, 'IpRanges': [{'CidrIp': '0.0.0.0/0'}]},
@@ -121,6 +121,7 @@ class Security:
             )
             # Attach on project
             Tagger.attach_on_project(security_group_id)
+            Tagger.k8s_attach(security_group_id)
             print('Ingress Successfully Set %s' % data)
         except Exception as e:
             print(e)

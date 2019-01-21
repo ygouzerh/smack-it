@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-table-cassandra
+spec:
+  template:
+    metadata:
+      labels:
+        app: create-table-cassandra
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: create-table-cassandra
+        image: machine424/create-table-cassandra
+        imagePullPolicy: Always

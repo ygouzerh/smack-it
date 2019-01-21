@@ -12,4 +12,4 @@ kubectl apply -f kafka-statefulset.yml
 
 # Create the topics, one for each country (see kakfa best practices (design-patterns ...))
 # Wait until the pod kafka-0 if ready (should be taking into account TODO)
-kubectl exec kafka-0 -- /usr/bin/kafka-topics --zookeeper kafka-zookeeper:2181 --topic france --create --partitions 1 --replication-factor 1
+kubectl exec kafka-0 -- /usr/bin/kafka-topics --zookeeper kafka-zookeeper:2181 --topic emojis --create --partitions 1 --replication-factor 1

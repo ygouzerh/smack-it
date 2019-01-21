@@ -101,8 +101,18 @@ spec:
         fsGroup: 1000
         runAsUser: 1000
       terminationGracePeriodSeconds: 30
-      volumes:
-      - emptyDir: {}
-        name: data
+      # volumes:
+      # - emptyDir: {}
+      #   name: data
   updateStrategy:
     type: OnDelete
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+      storageClassName: gp2

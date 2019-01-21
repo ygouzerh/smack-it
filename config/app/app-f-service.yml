@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+   name: app-f
+spec:
+  type: NodePort
+  ports:
+  - port: 5000
+    nodePort: 32222
+  selector:
+    app: app-f

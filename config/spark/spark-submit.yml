@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: spark-submit
+spec:
+  serviceAccountName: spark
+  containers:
+  - image: machine424/spark-submit
+    name: spark-submit
+    imagePullPolicy: Always

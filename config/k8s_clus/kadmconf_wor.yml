@@ -6,4 +6,4 @@ nodeRegistration:
 token: "yxddj3.7zcqr0inoe4v59qp"
 discoveryTokenUnsafeSkipCAVerification: true
 discoveryTokenAPIServers:
-  - 52.49.42.230:6443
+  - 34.240.148.215:6443
