@@ -17,7 +17,7 @@ def sendCassandra(iter):
 if __name__ == "__main__":
 
     sc = SparkContext(appName="SMACKIT")
-    ssc = StreamingContext(sc, 10)
+    ssc = StreamingContext(sc, 1)
 
     kvs = KafkaUtils.createStream(ssc, "kafka-zookeeper:2181", "test-consumer-group", {"emojis": 1})
     counts = kvs.flatMap(lambda m: [(m[0], em) for em in  m[1].split(",")]) \

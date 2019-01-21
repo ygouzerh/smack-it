@@ -6,5 +6,6 @@ spec:
   type: NodePort
   ports:
   - port: 5000
+    nodePort: 32222
   selector:
     app: app-f

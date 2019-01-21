@@ -20,6 +20,3 @@ def extract_emojis(tweet):
 while 1:
 
     producer.send('emojis', key=choice(countries).encode('utf-8'), value=extract_emojis(choice(tweets)).encode('utf-8'))
-
-
-    time.sleep(0.001)
