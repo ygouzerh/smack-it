@@ -57,7 +57,7 @@ class Role:
             print("We have attached the role to the project")
             client('iam').attach_role_policy(
                 RoleName=Role.get_default_role().role_name,
-                PolicyArn="arn:aws:iam::aws:policy/AdministratorAccess"
+                PolicyArn="arn:aws:iam::aws:policy/AmazonEC2FullAccess"
             )
             print("We have attached the default role to the AdministratorAccess policy")
         else:
@@ -127,7 +127,7 @@ class Role:
                 client('iam').remove_role_from_instance_profile(InstanceProfileName=instance_profile.name,
                     RoleName=role.name)
                 # Delete recursively other instance profile's roles
-                for instance_role in instance_profile.roles:                    
+                for instance_role in instance_profile.roles:
                     # Verify that we do not start the same process, as we could have consistency problems
                     if instance_role.name != role.name:
                         print("..Start the process of role deletion \
